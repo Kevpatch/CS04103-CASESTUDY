@@ -29,6 +29,7 @@ void reset() { printf("\033[1;0m"); }
 void menu();
 void submenu(int);
 void xml_display(string, string);
+void writeFile(ofstream& tf, string, string);
 
 // Global Variables
 char menu_opt, submenu_opt;
@@ -36,6 +37,7 @@ ifstream file1, file2, file3, file4, file5, file_a1, file_a2, file_a3, file_a4, 
 int src_time; // Source time 
 int c = 1; // ID counter
 int label_1a, label_1b, label_1c, label_1d, label_1e;
+ofstream toFile;
 string word; // FlightID's global variable
 string flt_id; // FlightID
 string comp_id; // computerID
@@ -451,7 +453,15 @@ int main() {
 			cyan();
 			cout << "Would you like to return to the Main Menu [Y/N]? "; cin >> menu_opt;
 		}
+
 		else if (menu_opt == '3') {
+			writeFile(toFile, word, displayComp);
+			cout << "-----------------------------------------------------------------" << endl;
+			cyan();
+			cout << "Would you like to return to the Main Menu [Y/N]? "; cin >> menu_opt;
+		}
+
+		else if (menu_opt == '4') {
 			int fileChoice;
 		
 			do {
@@ -754,7 +764,6 @@ int main() {
 					cout << "Would you like to return to the Sub Menu [Y/N]? "; cin >> submenu_opt;
 
 				}
-				
 
 				else if (submenu_opt == '3') {
 
@@ -776,6 +785,11 @@ int main() {
 
 		}
 
+		else if (menu_opt == '5') {
+			cout << "Thank you for using the program!" << endl;
+			exit(1);
+		}
+
 	} while (menu_opt == 'Y' || menu_opt == 'y');
 	
 	return 0;
@@ -789,8 +803,9 @@ void menu() {
 	cout << "*  [OPTIONS]                                                                  *" << endl;
 	cout << "*  [1] INPUT-DISPLAY VALIDATION                                               *" << endl;
 	cout << "*  [2] DISPLAY INPUT-DATA                                                     *" << endl;
-	cout << "*  [3] OPEN SUB-MENU                                                          *" << endl;
-	cout << "*  [4] EXIT                                                                   *" << endl;
+	cout << "*  [3] PUT INFORMATIO INTO FILE                                               *" << endl;
+	cout << "*  [4] OPEN SUB-MENU                                                          *" << endl;
+	cout << "*  [5] EXIT                                                                   *" << endl;
 	cout << "*******************************************************************************" << endl;
 	cout << endl;
 	cout << "Enter Option number [] ->"; cin >> menu_opt;
@@ -819,5 +834,37 @@ void xml_display(string _word, string _displayComp) {
 	cout << "The Aircraft Identification   =>     <flightID_02a   >  " << _word << "     </flightId_02a>" << endl;
 	cout << "The Computer Identification   =>     <computerId_02d >  " << _displayComp << "  </computerId_02d>" << endl;
 	cout << "_______________________________________________________________________________________________" << endl;
+
+}
+
+void writeFile(ofstream& tf, string _word, string _displayComp) {
+
+	tf.open("", ios::out | ios::app);
+
+	if (tf.fail()) {
+		red();
+		cout << "Error, wrong file, cannot open file." << endl;
+		cout << "Error Code 1" << endl;
+		reset();
+	}
+
+	purple();
+	cout << "DISPLAY-DATA IN XML FORMAT" << endl;
+	cout << "--------------------------" << endl;
+	red();
+	cout << "Time of arrival date          =>     <sourceTime_00e1>  " << src_time << "     </sourceTime__00e1>" << endl;
+	cout << "The Aircraft Identification   =>     <flightID_02a   >  " << _word << "     </flightId_02a>" << endl;
+	cout << "The Computer Identification   =>     <computerId_02d >  " << _displayComp << "  </computerId_02d>" << endl;
+	cout << "_______________________________________________________________________________________________" << endl;
+
+	tf << "DISPLAY-DATA IN XML FORMAT" << endl;
+	tf << "--------------------------" << endl;
+	tf << "Time of arrival date          =>     <sourceTime_00e1>  " << src_time << "     </sourceTime__00e1>" << endl;
+	tf << "The Aircraft Identification   =>     <flightID_02a   >  " << _word << "     </flightId_02a>" << endl;
+	tf << "The Computer Identification   =>     <computerId_02d >  " << _displayComp << "  </computerId_02d>" << endl;
+	tf << "_______________________________________________________________________________________________" << endl;
+
+	cout << "File Written to Sucessfully" << endl;
+	tf.close();
 
 }
